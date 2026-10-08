@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cansei - Criado por: Maria, 1º B</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+    body {
+      background-color: #050510;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+    #game-container {
+      position: relative;
+      box-shadow: 0 0 30px rgba(0, 200, 255, 0.2);
+      border-radius: 12px;
+      overflow: hidden;
+      border: 2px solid #1a1a3a;
+    }
+    canvas {
+      background: radial-gradient(circle at center, #0b0b26 0%, #020208 100%);
+      display: block;
+    }
+    .ui-overlay {
+      position: absolute;
+      top: 15px;
+      left: 15px;
+      right: 15px;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+      font-weight: bold;
+      text-shadow: 0 0 5px #000;
+    }
+    .bar-container {
+      width: 200px;
+      height: 16px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-top: 4px;
+    }
+    .bar-fill {
+      height: 100%;
+      transition: width 0.1s ease;
+    }
+    #boss-bar { background: linear-gradient(90deg, #ff0055, #ff5500); width: 100%; }
+    #energy-bar { background: linear-gradient(90deg, #00d2ff, #00fff0); width: 100%; }
+    
+    .author-badge {
+      position: absolute;
+      bottom: 12px;
+      left: 15px;
+      font-size: 0.85rem;
+      color: #00fff0;
+      text-shadow: 0 0 5px rgba(0, 255, 240, 0.5);
+      font-weight: bold;
+      pointer-events: none
