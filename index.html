@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Cansei - Criado por: Kaue, 1º B</title>
+  <title>Cansei - Criado por Maria do 1º B</title>
   <style>
     * {
       box-sizing: border-box;
@@ -16,7 +16,7 @@
     html, body {
       width: 100%;
       height: 100%;
-      background-color: #050510;
+      background-color: #03030d;
       color: #fff;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       overflow: hidden;
@@ -26,60 +26,88 @@
     }
     #game-container {
       position: relative;
-      width: 100%;
+      width: 100vw;
+      height: 100vh;
       max-width: 800px;
-      aspect-ratio: 4 / 3;
-      box-shadow: 0 0 30px rgba(0, 200, 255, 0.2);
-      border-radius: 12px;
+      max-height: 600px;
+      background: #020208;
       overflow: hidden;
-      border: 2px solid #1a1a3a;
-      background: #000;
+      border: 3px solid #00d2ff;
+      border-radius: 12px;
+      box-shadow: 0 0 25px rgba(0, 210, 255, 0.4);
+    }
+    /* Estilo quando em Tela Cheia */
+    #game-container:fullscreen {
+      max-width: none;
+      max-height: none;
+      border: none;
+      border-radius: 0;
     }
     canvas {
       width: 100%;
       height: 100%;
-      background: radial-gradient(circle at center, #0b0b26 0%, #020208 100%);
       display: block;
     }
     .ui-overlay {
       position: absolute;
-      top: 10px;
-      left: 10px;
-      right: 10px;
+      top: 12px;
+      left: 15px;
+      right: 15px;
       display: flex;
       justify-content: space-between;
+      align-items: center;
       pointer-events: none;
       font-weight: bold;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       text-shadow: 0 0 5px #000;
       z-index: 5;
     }
     .bar-container {
-      width: 140px;
+      width: 130px;
       height: 14px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      border-radius: 7px;
       overflow: hidden;
       margin-top: 4px;
     }
     .bar-fill {
       height: 100%;
-      transition: width 0.1s ease;
+      transition: width 0.1s linear;
     }
     #boss-bar { background: linear-gradient(90deg, #ff0055, #ff5500); width: 100%; }
     #energy-bar { background: linear-gradient(90deg, #00d2ff, #00fff0); width: 100%; }
-    
+
+    /* Botão de Tela Cheia no Canto Superior */
+    .fullscreen-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      z-index: 20;
+      background: rgba(0, 210, 255, 0.2);
+      border: 1px solid #00fff0;
+      color: #fff;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: bold;
+      cursor: pointer;
+      backdrop-filter: blur(4px);
+    }
+    .fullscreen-btn:hover {
+      background: rgba(0, 210, 255, 0.5);
+    }
+
     .author-badge {
       position: absolute;
       bottom: 8px;
-      left: 10px;
-      font-size: 0.75rem;
+      left: 15px;
+      font-size: 0.8rem;
       color: #00fff0;
-      text-shadow: 0 0 5px rgba(0, 255, 240, 0.5);
       font-weight: bold;
-      pointer-events: none;
+      text-shadow: 0 0 5px #000;
       z-index: 5;
+      pointer-events: none;
     }
 
     #screen-overlay {
@@ -88,217 +116,251 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(5, 5, 16, 0.92);
+      background: rgba(5, 5, 16, 0.95);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(4px);
       z-index: 10;
-      padding: 15px;
+      padding: 20px;
       text-align: center;
     }
     h1 {
-      font-size: 2.2rem;
-      letter-spacing: 2px;
+      font-size: 2.8rem;
       color: #00d2ff;
-      text-shadow: 0 0 15px rgba(0, 210, 255, 0.6);
-      margin-bottom: 5px;
+      text-shadow: 0 0 15px rgba(0, 210, 255, 0.8);
+      margin-bottom: 2px;
     }
-    .credits {
-      font-size: 1rem;
-      color: #00fff0;
+    .sub-author {
+      font-size: 1.1rem;
+      color: #ff0077;
       font-weight: bold;
-      margin-bottom: 12px;
-      text-shadow: 0 0 8px rgba(0, 255, 240, 0.6);
+      margin-bottom: 15px;
     }
     p {
-      margin-bottom: 18px;
-      color: #aaa;
-      font-size: 0.9rem;
-      max-width: 90%;
-      line-height: 1.4;
+      margin-bottom: 20px;
+      color: #ddd;
+      font-size: 0.95rem;
+      max-width: 85%;
+      line-height: 1.5;
+      background: rgba(255, 255, 255, 0.05);
+      padding: 12px;
+      border-radius: 8px;
     }
-    button.btn-play {
-      padding: 10px 25px;
-      font-size: 1.1rem;
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    button.main-btn {
+      padding: 12px 35px;
+      font-size: 1.2rem;
       font-weight: bold;
       background: linear-gradient(45deg, #00d2ff, #0072ff);
       color: #fff;
       border: none;
       border-radius: 25px;
       cursor: pointer;
-      box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
-      transition: all 0.2s ease;
+      box-shadow: 0 0 15px rgba(0, 210, 255, 0.5);
+      transition: transform 0.2s;
     }
-    button.btn-play:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px rgba(0, 210, 255, 0.8);
-    }
-    .controls-hint {
-      margin-top: 15px;
-      font-size: 0.75rem;
-      color: #777;
+    button.main-btn:hover {
+      transform: scale(1.08);
     }
 
-    /* Controles para Celular / Touch */
-    .touch-controls {
+    /* Controles Virtuais Touch (Mobile) */
+    .mobile-controls {
       position: absolute;
-      bottom: 10px;
-      left: 0;
-      right: 0;
+      bottom: 15px;
+      left: 15px;
+      right: 15px;
       display: none;
       justify-content: space-between;
-      padding: 0 15px;
-      pointer-events: none;
+      align-items: flex-end;
       z-index: 6;
+      pointer-events: none;
     }
-    @media (hover: none) and (pointer: coarse) {
-      .touch-controls { display: flex; }
+    @media (pointer: coarse) {
+      .mobile-controls { display: flex; }
     }
-    .dpad, .action-btns {
+    .dpad {
       display: grid;
+      grid-template-columns: repeat(3, 45px);
+      grid-template-rows: repeat(2, 45px);
       gap: 5px;
       pointer-events: auto;
     }
-    .dpad {
-      grid-template-columns: repeat(3, 40px);
-      grid-template-rows: repeat(2, 40px);
-    }
-    .touch-btn {
-      background: rgba(255, 255, 255, 0.15);
-      border: 1px solid rgba(255, 255, 255, 0.3);
+    .btn-touch {
+      background: rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
       color: #fff;
       border-radius: 8px;
-      font-weight: bold;
+      font-size: 1.2rem;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1rem;
     }
-    .touch-btn:active {
-      background: rgba(0, 210, 255, 0.5);
-    }
+    .btn-touch:active { background: #00d2ff; color: #000; }
     .btn-fire {
-      width: 60px;
-      height: 60px;
+      width: 70px;
+      height: 70px;
       border-radius: 50%;
-      background: rgba(0, 210, 255, 0.3);
+      background: rgba(0, 210, 255, 0.4);
       border: 2px solid #00fff0;
+      font-size: 0.8rem;
+      font-weight: bold;
+      pointer-events: auto;
+      color: #fff;
     }
   </style>
 </head>
-<body>
+<body onclick="window.focus();">
 
   <div id="game-container">
+    <button class="fullscreen-btn" onclick="toggleFullscreen()">⛶ Tela Cheia</button>
+
     <canvas id="canvas" width="800" height="600"></canvas>
 
     <div class="ui-overlay">
       <div>
-        <div>ESTICHE</div>
+        <div>ESTICHE 💤</div>
         <div class="bar-container"><div id="energy-bar" class="bar-fill"></div></div>
       </div>
-      <div style="text-align: right;">
-        <div>GIGANTE DAS GALÁXIAS</div>
+      <div style="text-align: right; margin-right: 110px;">
+        <div>GIGANTE 👾</div>
         <div class="bar-container"><div id="boss-bar" class="bar-fill"></div></div>
       </div>
     </div>
 
-    <div class="author-badge">Criado por: Kaue, 1º B</div>
+    <div class="author-badge">Criado por Maria do 1º B</div>
 
-    <!-- Controles Mobile -->
-    <div class="touch-controls">
+    <!-- Controles de Toque para Celular -->
+    <div class="mobile-controls">
       <div class="dpad">
         <div></div>
-        <div class="touch-btn" id="btn-up">▲</div>
+        <div class="btn-touch" id="m-up">▲</div>
         <div></div>
-        <div class="touch-btn" id="btn-left">◄</div>
-        <div class="touch-btn" id="btn-down">▼</div>
-        <div class="touch-btn" id="btn-right">►</div>
+        <div class="btn-touch" id="m-left">◄</div>
+        <div class="btn-touch" id="m-down">▼</div>
+        <div class="btn-touch" id="m-right">►</div>
       </div>
-      <div class="action-btns">
-        <div class="touch-btn btn-fire" id="btn-shoot">ATIRAR</div>
-      </div>
+      <div class="btn-touch btn-fire" id="m-shoot">ATIRAR</div>
     </div>
 
     <div id="screen-overlay">
-      <h1 id="title-text">CANSEI</h1>
-      <div class="credits">Criado por: Kaue, 1º B</div>
-      <p id="desc-text">Estiche cansou das ameaças cósmicas. Chegou a hora de derrotar o Gigante de uma vez por todas!</p>
-      <button class="btn-play" id="btn-action" onclick="startGame()">JOGAR</button>
-      <div class="controls-hint">
-        <b>Teclado:</b> [W, A, S, D] ou Setas | <b>Espaço:</b> Atirar | <b>Shift:</b> Turbo
+      <h1 id="title-text">CANSEI!</h1>
+      <div class="sub-author">Criado por Maria do 1º B</div>
+      <p id="desc-text">
+        O alienígena azul <b>Estiche</b> só queria tirar uma soneca em paz no espaço... mas o <b>Gigante</b> não para de fazer barulho!<br><br>
+        Estiche <b>CANSEI</b> de aguentar essa bagunça! Ajude-o a derrotar o Gigante para conseguir dormir.
+      </p>
+      <div class="btn-group">
+        <button class="main-btn" onclick="startGame()">JOGAR</button>
+        <button class="main-btn" style="background: linear-gradient(45deg, #ff0077, #7700ff);" onclick="toggleFullscreen(); startGame();">JOGAR EM TELA CHEIA</button>
       </div>
     </div>
   </div>
 
   <script>
+    const container = document.getElementById('game-container');
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
     const screenOverlay = document.getElementById('screen-overlay');
     const titleText = document.getElementById('title-text');
     const descText = document.getElementById('desc-text');
-    const btnAction = document.getElementById('btn-action');
     const bossBar = document.getElementById('boss-bar');
     const energyBar = document.getElementById('energy-bar');
 
     let isRunning = false;
     let keys = {};
-    let stars = [];
-    let particles = [];
     let bullets = [];
     let bossBullets = [];
+    let particles = [];
+    let stars = [];
 
-    for (let i = 0; i < 80; i++) {
+    // Gerar fundo estelar
+    for(let i = 0; i < 80; i++) {
       stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        size: Math.random() * 2,
+        x: Math.random() * 800,
+        y: Math.random() * 600,
+        s: Math.random() * 2 + 1,
         speed: Math.random() * 0.5 + 0.2
       });
     }
 
-    const estiche = {
-      x: 100,
-      y: 270,
-      width: 40,
-      height: 40,
-      speed: 5,
-      hp: 100,
-      maxHp: 100,
-      cooldown: 0
-    };
+    const player = { x: 80, y: 270, w: 40, h: 40, speed: 6, hp: 100, maxHp: 100, cooldown: 0 };
+    const boss = { x: 630, y: 150, w: 120, h: 280, hp: 1000, maxHp: 1000, dir: 1, speed: 3, attackTimer: 0 };
 
-    const boss = {
-      x: 620,
-      y: 150,
-      width: 120,
-      height: 300,
-      hp: 1000,
-      maxHp: 1000,
-      direction: 1,
-      speed: 2,
-      attackTimer: 0,
-      phase: 1,
-      color: '#ff2255'
-    };
-
-    // Controles por teclado
-    window.addEventListener('keydown', e => keys[e.code] = true);
+    // Capturar foco e impedir rolagem do blog
+    window.addEventListener('keydown', e => {
+      if (["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"].includes(e.code)) {
+        e.preventDefault();
+      }
+      keys[e.code] = true;
+    });
     window.addEventListener('keyup', e => keys[e.code] = false);
 
-    // Suporte aos botões virtuais (Touch)
-    function setupTouchBtn(id, code) {
+    // Mudar para Tela Cheia
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        if (container.requestFullscreen) container.requestFullscreen();
+        else if (container.webkitRequestFullscreen) container.webkitRequestFullscreen();
+      } else {
+        if (document.exitFullscreen) document.exitFullscreen();
+      }
+    }
+
+    // Suporte aos botões mobile
+    function bindTouch(id, code) {
       const el = document.getElementById(id);
       if(!el) return;
       el.addEventListener('touchstart', (e) => { e.preventDefault(); keys[code] = true; });
       el.addEventListener('touchend', (e) => { e.preventDefault(); keys[code] = false; });
-      el.addEventListener('mousedown', () => keys[code] = true);
-      el.addEventListener('mouseup', () => keys[code] = false);
     }
-    setupTouchBtn('btn-up', 'KeyW');
-    setupTouchBtn('btn-down', 'KeyS');
-    setupTouchBtn('btn-left', 'KeyA');
-    setupTouchBtn('btn-right', 'KeyD');
-    setupTouch
+    bindTouch('m-up', 'ArrowUp');
+    bindTouch('m-down', 'ArrowDown');
+    bindTouch('m-left', 'ArrowLeft');
+    bindTouch('m-right', 'ArrowRight');
+    bindTouch('m-shoot', 'Space');
+
+    function startGame() {
+      window.focus();
+      screenOverlay.style.display = 'none';
+      player.hp = 100;
+      player.x = 80;
+      player.y = 270;
+      boss.hp = boss.maxHp;
+      boss.y = 150;
+      bullets = [];
+      bossBullets = [];
+      particles = [];
+      isRunning = true;
+      requestAnimationFrame(loop);
+    }
+
+    function createExplosion(x, y, color) {
+      for(let i = 0; i < 8; i++) {
+        particles.push({
+          x, y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6,
+          life: 20,
+          color
+        });
+      }
+    }
+
+    function update() {
+      if (!isRunning) return;
+
+      // Movimentação do Estiche (WASD ou Setas)
+      if ((keys['KeyW'] || keys['ArrowUp']) && player.y > 10) player.y -= player.speed;
+      if ((keys['KeyS'] || keys['ArrowDown']) && player.y < 600 - player.h - 10) player.y += player.speed;
+      if ((keys['KeyA'] || keys['ArrowLeft']) && player.x > 10) player.x -= player.speed;
+      if ((keys['KeyD'] || keys['ArrowRight']) && player.x < 350) player.x += player.speed;
+
+      // Disparo (Espaço)
+      if (player.cooldown > 0) player.cooldown--;
+      if (keys['Space'] && player.cooldown === 0
